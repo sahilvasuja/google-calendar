@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+      "module": "commonjs" /* to compile the project in nodejs .*/,
+      "sourceMap": true,
+      "target": "es5",
+      "moduleResolution": "node",
+      "outDir": "./dist" /* location where the compile js files get stored .*/,
+      "baseUrl": "../backend/src",
+      "types": ["node", "express", "cors"]
+    },
+    "include": ["../backend/src/**/*.ts"],
+    "exclude": ["node_modules", ".vscode"]
+  }
+  
