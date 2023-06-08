@@ -2,6 +2,7 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import ReduxProvider from './redux/provider'
+import { ToastContainer } from 'react-toastify'
 const inter = Inter({ subsets: ['latin'] })
 
 // export const metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
         <ReduxProvider>
     <html lang="en">
       <body className={inter.className}>
+      <ToastContainer hideProgressBar />
           {children}
       </body>
     </html>
