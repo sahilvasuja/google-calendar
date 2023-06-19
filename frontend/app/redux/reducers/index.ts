@@ -3,6 +3,7 @@ import monthIndex from './monthindex/slice'
 import addEvent from './addevent/slice'
 import deleteEvent from './deleteevent/slice'
 import editEvent from './editevent/slice'
+import loginUser from './login/slice'
 
 // Define a Redux root reducer called 'rootReducer'
 export const rootReducer = (state, action) => {
@@ -26,7 +27,8 @@ const appReducer = combineReducers({
 monthIndex:monthIndex,
 addEvent:addEvent,
 deleteEvent:deleteEvent,
-editEvent:editEvent
+editEvent:editEvent,
+loginUser:loginUser
 
 });
 export default rootReducer;

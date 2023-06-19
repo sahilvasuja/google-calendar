@@ -1,8 +1,16 @@
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { useAppDispatch } from "@/app/redux/store";
 import { editEventRequest } from "@/app/redux/reducers/editevent/slice";
+interface Modaltypes{
+  eventEndTime:String,
+  eventTitle:String,
+  eventStartTime:String,
+  eventId:any,
+  eventDate:String,
+  closeEventModal: ()=>void
+}
 export const EventModal = ({eventStartTime,eventEndTime,eventDate,eventTitle,eventId,closeEventModal }) =>{
-    const [showmodal, setShowModal] = useState(false);
+   
   const [inputValue, setInputValue] = useState(eventTitle);
   const [startTime, setstartTime] = useState(eventStartTime);
   const [endTime, setendTime] = useState(eventEndTime);
@@ -41,19 +49,8 @@ export const EventModal = ({eventStartTime,eventEndTime,eventDate,eventTitle,eve
     console.log(event.target.value);
     setInputValue(event.target.value);
   };
-  const monthCss = {
-    display: "grid",
-    gridTemplateColumns: " repeat(7, 1fr)",
-    color: "#000000",
-    padding: "15px",
-  };
-  const handleDateClick = (event) => {
-    setShowModal(true);
-    setDate(event.target.textContent)
-    console.log(event.target.textContent);
-
-    // onDateClick(day); // Pass the clicked date to the parent component
-  };
+ 
+  
     return(
         <div className="fixed  flex items-center justify-center top-1/2 left-1/2  z-50">
   <div className="bg-white w-full max-w-lg mx-auto rounded-lg shadow-lg overflow-hidden">

@@ -18,7 +18,7 @@ export function getMonth(month) {
 }
 
 
-export const isValidDateFormat = (date) => {
+export const isValidDateFormat = (date:any) => {
   const dateFormatRegex = /^\d{2}-\d{2}-\d{2}$/;
   return dateFormatRegex.test(date);
 };

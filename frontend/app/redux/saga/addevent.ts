@@ -8,10 +8,13 @@ import {
 } from "../reducers/addevent/slice";
 import { addEventApi } from "@/api/addEvent";
 import workDeleteEvent from './deleteevent';
+import workLogin from './login';
+
 import { editEventRequest } from '../reducers/editevent/slice';
 import workEditEvent from './editevent';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { loginRequest } from '../reducers/login/slice';
 
 function* workAddEvent(action: { payload: any }) {
   
@@ -21,7 +24,7 @@ function* workAddEvent(action: { payload: any }) {
   try {
     console.log("in try")
     // const response = yield call(axios.post, "http://localhost:4000/addEvent",
-    const response=yield call( addEventApi,payload
+    const response = yield call( addEventApi,payload
     );
     const data = response.data;
     console.log("Saga: Received data", data);
@@ -39,6 +42,7 @@ function* watchSaga() {
   yield takeEvery(eventRequest.type, workAddEvent);
   yield takeEvery(deleteEventRequest.type,workDeleteEvent)
   yield takeEvery(editEventRequest.type,workEditEvent)
+  // yield takeEvery(loginRequest.type,workLogin)
 }
 export function* rootSaga() {
   yield all([watchSaga() ]);

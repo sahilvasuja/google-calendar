@@ -11,7 +11,8 @@ import { CalendarHeader } from "@/Component/CalendarHeader/page";
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { useAppDispatch } from "@/app/redux/store";
+import { setUser } from "../redux/reducers/login/slice";
 
 const Dropdown = ({ name, email }) => {
   return (
@@ -69,7 +70,7 @@ const Navbar = ({}: NavbarProps) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pic, setPic] = useState("");
-  const[userId,setUserId]=useState('')
+  const dispatch = useAppDispatch();
   const {
     user,
     isAuthenticated,
@@ -80,15 +81,27 @@ const Navbar = ({}: NavbarProps) => {
   } = useAuth0();
   const [showDropdown, setShowDropdown] = useState(false);
   const [onclickDrowdown, setOnclickDropdown] = useState(false);
+
   const handleLogout = () => {
+    
     logout("http://localhost:3000/").catch((error: any) => {
       console.log("Error occurred during logout:", error);
       // Handle the error here (e.g., show an error message, perform fallback actions)
     });
   };
- 
+ const logIn=async()=>{
+  const token = await getAccessTokenSilently();
+  try {
+    dispatch(setUser(token));
+  } catch (error) {
+    console.log(error.message);
+  }
+  // if (isAuthenticated) {
+  //   // Dispatch the action with the user data
+  //   dispatch(setUser(user));
+  //  }
+ }
 
- 
 
   const handleDropdown = () => {
     setOnclickDropdown(!onclickDrowdown);
@@ -109,10 +122,9 @@ const Navbar = ({}: NavbarProps) => {
   // }
   useEffect(() => {
     callProtectedApi();
-    sendUser();
   }, [isAuthenticated]);
+  
 
-  const [userdata, setUserdata] = useState([]);
  
 
   const handleSignIn = () => {
@@ -123,26 +135,6 @@ const Navbar = ({}: NavbarProps) => {
 
 
 
-  const sendUser = async () => {
-    try {
-      const token = await getAccessTokenSilently();
-      console.log(token);
-  
-      const response = await axios.get("http://localhost:4000/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log(response.data, "28");
-      console.log(response.data._id,'175');
-      setUserdata(response.data);
-      setUserId(response.data._id)
-      // toast.success('login success')
-    } catch (error) {
-      console.log(error.message);
-      // toast.error('login required')
-    }
-  };
   // const callApi = async () => {
   //   try {
   //     const res = await axios.get("http://localhost:4000/unauthorized");
@@ -225,47 +217,18 @@ const Navbar = ({}: NavbarProps) => {
             </div>
           )
         ) : (
-          //  <button className='bg-red-400 p-3 rounded-lg text-black' onClick={() => logout({ logoutParams: { returnTo: 'http://localhost:3000/' } })}>Log Out</button>
+          <>
           <button
             className=" p-3 rounded-lg hover:bg-gray-300 text-sky-600 text-md"
-            onClick={handleSignIn()}
-            // onClick={() => loginWithRedirect()}
-          >
+            // onClick={ loginWithRedirect()}
+            onClick={() => loginWithRedirect()}
+            >
             Sign in
           </button>
+            </>
         )}
-        {/* {
-          isAuthenticated && 
-          <div>{JSON.stringify(user)}</div>
-         } */}
-        {/* <GoogleLogin 
-      clientId='517962767136-o9nphoso0b4t6ls41hvmf15na3o6anth.apps.googleusercontent.com'
-      buttonText='SignIn & Authorize Calendar'
-      onSuccess={responseGoogle}
-      onFailure={responseError}
-      cookiePolicy={'single_host_policy'}
-      responseType='code'
-      accessType='offline'
-      scope='openid email profile https://www.googleapis.com/auth/calendar'
-      /> */}
-        {/* <div className="flex items-center md:ml-4">
-         (
-            <div className=" hidden sm:flex relative text-grey h-16 w-[201px] lg:mr-6 focus-within:text-gray-400">
-              <button
-                className="absolute top-1/2 right-0 transform -translate-x-1/2 -translate-y-1/2 px-2 py-2 text-gray-500 hover:text-primaryColor focus:outline-none"
-               
-              >SignIn
-              </button>
-            </div>
-          )
-        </div> */}
-      </div>
-      <div className="flex flex-col text-black">
-        {/* <button onClick={callApi}>unprotected</button>
-    <button onClick={callProtectedApi2}>protected</button>
-    <button onClick={callProtectedApi}>userdata</button>
-   */}
-      </div>
+        {/* <button className='bg-red-400 p-3 rounded-lg text-black' onClick={logIn}>LogIn</button> */}
+             </div>
     </nav>
   );
 };

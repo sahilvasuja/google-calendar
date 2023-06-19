@@ -11,14 +11,6 @@ import { rootSaga } from "./saga/addevent";
 // import cardReducer from "./reducer/cardSlice";
 // import userSlice from "./reducer/userSlice";
 import storage from './redux-persist/storageFile'
-import {
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from 'redux-persist';
 import rootReducer from "./reducers";
 const saga = createSagaMiddleware();
 const persistConfig = {

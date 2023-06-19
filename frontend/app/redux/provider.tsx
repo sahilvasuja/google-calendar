@@ -4,13 +4,10 @@ import { PropsWithChildren } from 'react';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import { Auth0Provider } from "@auth0/auth0-react";
-import { useAuth0 } from "@auth0/auth0-react";
 const persistor = persistStore(store);
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 export default function ReduxProvider({ children }: PropsWithChildren) {
-  const { user, isAuthenticated, isLoading, loginWithRedirect, logout } =
-  useAuth0();
   return (
     <Provider store={store} >
        <Auth0Provider

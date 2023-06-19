@@ -16,7 +16,13 @@ export const baseAPI = axios.create({
   export  const addEventApi=async(payload: any)=>{
         return baseAPI.post('/addEvent',payload)
     }
+    export  const loginApi=async(payload: any)=>{
+      return baseAPI.get('/',payload)
+  }
     export const editEventApi=async(payload:any)=>{
       const eventId=payload.eventId
       return baseAPI.patch(`/editEvent/${eventId}`,payload)
     }
+
+
+

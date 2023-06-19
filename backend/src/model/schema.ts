@@ -6,13 +6,14 @@ const UserSchema=new mongoose.Schema({
 })
 const EventSchema=new mongoose.Schema({
     title: String,
-    id: {type: mongoose.Schema.Types.ObjectId},
+    userId: {type: mongoose.Schema.Types.ObjectId},
     description: String,
     location:String,
     startTime: String,
     endTime: String,
     date:String,
-    user: {type: mongoose.Schema.Types.ObjectId, ref: 'UserSchema'}
+    mail:String,
+    user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 })
 // export const GoogleCalender= mongoose.model('UserSchema',UserSchema, 'EventSchema',EventSchema)
 // module.exports=GoogleCalender

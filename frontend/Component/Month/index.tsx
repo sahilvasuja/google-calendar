@@ -4,12 +4,14 @@ import { isValidDateFormat } from "@/utils/helper";
 import React, { useEffect, useState } from "react";
 import { Day } from "../Day";
 import { toast, ToastContainer } from 'react-toastify';
-import { Modal } from "../Day";
+import { setUserId } from "@/app/redux/reducers/userdetail/slice";
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from "axios";
 export default function Month({ month }: any) {
   const [showmodal, setShowModal] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [startTime, setstartTime] = useState("");
-  const [endTime, setendTime] = useState("");
+  let [startTime, setstartTime] = useState("");
+  let [endTime, setendTime] = useState("");
   const [date, setDate] = useState("");
   const [dateError, setDateError] = useState("");
   const [selectedHour, setSelectedHour] = useState("12");
@@ -20,8 +22,31 @@ export default function Month({ month }: any) {
   const [selectedStartPeriod, setSelectedStartPeriod] = useState("AM");
   const [showToast, setShowToast] =useState(false);
   const [showError, setShowError] = useState(false);
+  const[userId,setUserId]=useState('')
+  const [userdata, setUserdata] = useState([]);
+  const [email,setEmail]=useState('')
   const loading = useAppSelector((state) => state.addEvent.loading);
   const event = useAppSelector((state) => state.addEvent.event);
+
+  const dispatch = useAppDispatch();
+  const {
+    user,
+    isAuthenticated,
+    isLoading,
+    getAccessTokenSilently,
+    loginWithRedirect,
+    logout,
+  } = useAuth0();
+  useEffect(() => {
+    setStartTime()
+    setEndTime()
+  })
+  useEffect(() => {
+    sendUser();
+  // dispatch(setUserId())
+  }, [isAuthenticated])
+  
+console.log(user?.email,'48')
   const handlestartTimeChange = (event) => {
     setstartTime(event.target.value);
   };
@@ -31,11 +56,13 @@ export default function Month({ month }: any) {
   const setStartTime = () => {
     const formattedHour = selectedStartPeriod === "PM" && selectedStartHour !== "12" ? parseInt(selectedStartHour) + 12 : selectedStartHour;
     const formattedStartTime = `${formattedHour}:${selectedStartMinute}:${selectedStartPeriod}`;
+    console.log(formattedStartTime,'34')
     setstartTime(formattedStartTime);
   };
   const setEndTime = () => {
     const formattedHour = selectedPeriod === "PM" && selectedHour !== "12" ? parseInt(selectedHour) + 12 : selectedHour;
     const formattedEndTime = `${formattedHour}:${selectedMinute}:${selectedPeriod}`;
+    console.log(formattedEndTime,'39')
     setendTime(formattedEndTime);
   };
   const handleInputChange = (event) => {
@@ -57,7 +84,32 @@ export default function Month({ month }: any) {
 
     // onDateClick(day); // Pass the clicked date to the parent component
   };
-  const dispatch = useAppDispatch();
+
+  const sendUser = async () => {
+    try {
+      const token = await getAccessTokenSilently();
+      // console.log(token);
+  
+      const response = await axios.get("http://localhost:4000/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data,":response.data")
+      console.log(response.data.user._id, "98");
+      console.log(response.data.user.email,'99');
+      setUserdata(response.data.user);
+      setUserId(response.data.user._id)
+      setEmail(response.data.user.email)
+      // toast.success('login success')
+    } catch (error) {
+      console.log(error.message);
+      // toast.error('login required')
+    }
+  };
+  console.log(userId,':userId');
+  // const users = useAppSelector(state => state.loginUser.user);
+  // console.log(users,'69');
   function handleaddEvent() {
     console.log(date,'40 han')
     if (!inputValue || !date || !startTime || !endTime) {
@@ -78,14 +130,19 @@ export default function Month({ month }: any) {
       //   setDateError("")
       // }
     }
+    startTime=startTime.replace(/:([AP]M)$/, '');
+    endTime=endTime.replace(/:([AP]M)$/, '');
+    console.log(startTime,":startTime");
     setShowError(false);
+    console.log(endTime,'82');
     dispatch(
       eventRequest({
         title: inputValue,
         startTime: startTime,
         endTime: endTime,
-        date:date
-
+        date:date,
+        userId:userId,
+        user:email
       })
     );
 
@@ -96,19 +153,6 @@ export default function Month({ month }: any) {
     setDate("")
     setShowModal(false)
   }
-  // useEffect(() => {
-  //   if (event && showToast) { 
-  //     toast.success('Event added successfully!');
-  //   }
-  // }, [event,showToast]);
-  // useEffect(() => {
-  //   if (!loading && showToast) {
-  //     toast.error('Failed to add event. Please try again.');
-  //   }
-  // }, [loading, showToast]);
-  // useEffect(() => {
-  //   setShowToast(false);
-  // }, []);
   return (
     <>
    {showmodal ? (
@@ -253,6 +297,7 @@ export default function Month({ month }: any) {
           value={selectedPeriod} className='text-black'
           onChange={(e) =>{
             setSelectedPeriod(e.target.value)
+            console.log(e.target.value,'257');
             setEndTime();
           }
           }
