@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import path from "path";
 import { connect } from "./db/connection";
 import axios from "axios";
@@ -25,7 +25,7 @@ const jwtCheck = auth({
 //   algorithms: ['RS256']
 // })
 // const todo=require('./model/dropdowntodo')
-dotenv.config({ path: "./config.env" });
+// dotenv.config({ path: "./config.env" });
 const port = 4000;
 const app = express();
 app.use(cors());
